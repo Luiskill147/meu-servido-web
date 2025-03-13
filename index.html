@@ -1,77 +1,203 @@
-import random
-import time
-
-class JogoPPTLS:
-    def __init__(self):
-        self.opcoes = ['pedra', 'papel', 'tesoura', 'spock', 'lagarto']
-        self.regras = {
-            'pedra': ['tesoura', 'lagarto'],
-            'papel': ['pedra', 'spock'],
-            'tesoura': ['papel', 'lagarto'],
-            'spock': ['pedra', 'tesoura'],
-            'lagarto': ['papel', 'spock']
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pedra, Papel, Tesoura, Spock, Lagarto</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            background-image: url('https://i.imgur.com/SUA_NOVA_IMAGEM.jpg'); /* Substitua pelo URL da nova imagem */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        self.historico_jogador = []
-        self.historico_ia = []
-        self.pontuacao_jogador = 0
-        self.pontuacao_ia = 0
 
-    def escolher_ia(self):
-        if not self.historico_jogador:
-            return random.choice(self.opcoes)
-        padrao = self.detectar_padrao()
-        if padrao:
-            return self.prever_jogada(padrao)
-        return random.choice(self.opcoes)
+        #mainContent {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
 
-    def detectar_padrao(self):
-        if len(self.historico_jogador) < 3:
-            return None
-        for i in range(len(self.historico_jogador) - 2):
-            padrao = self.historico_jogador[i:i + 2]
-            if padrao == self.historico_jogador[-2:]:
-                return padrao
-        return None
+        h1 {
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
-    def prever_jogada(self, padrao):
-        ultima_jogada = padrao[1]
-        vulnerabilidades = []
-        for jogada, derrotas in self.regras.items():
-            if ultima_jogada in derrotas:
-                vulnerabilidades.append(jogada)
-        return random.choice(vulnerabilidades)
+        #choices {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
-    def determinar_vencedor(self, jogador, ia):
-        if jogador == ia:
-            return 'empate'
-        if ia in self.regras[jogador]:
-            return 'jogador'
-        return 'ia'
+        .choice-btn {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
 
-    def jogar(self):
-        jogador = input("Escolha pedra, papel, tesoura, spock ou lagarto: ").lower()
-        if jogador not in self.opcoes:
-            print("Opção inválida.")
-            return
-        ia = self.escolher_ia()
-        vencedor = self.determinar_vencedor(jogador, ia)
+        .choice-btn:hover {
+            transform: scale(1.1);
+        }
 
-        print(f"Jogador: {jogador}, IA: {ia}")
-        if vencedor == 'jogador':
-            print("Você venceu!")
-            self.pontuacao_jogador += 1
-        elif vencedor == 'ia':
-            print("A IA venceu!")
-            self.pontuacao_ia += 1
-        else:
-            print("Empate!")
+        .choice-btn i {
+            font-size: 60px;
+            color: #3498db;
+            transition: transform 0.2s ease;
+        }
 
-        self.historico_jogador.append(jogador)
-        self.historico_ia.append(ia)
-        print(f"Pontuação: Jogador {self.pontuacao_jogador}, IA {self.pontuacao_ia}")
+        .choice-btn:hover i {
+            transform: scale(1.1);
+            color: #2980b9;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
 
-jogo = JogoPPTLS()
-while True:
-    jogo.jogar()
-    if input("Jogar novamente? (s/n): ").lower() != 's':
-        break
+        #gameArea {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        #userChoice, #computerChoice {
+            font-size: 18px;
+            margin: 0 20px;
+            color: #fff;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        #result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #score {
+            font-size: 18px;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        #resetBtn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #resetBtn:hover {
+            background-color: #c0392b;
+        }
+
+        .choice-btn.winner {
+            box-shadow: 0 0 20px #ffeb3b;
+            transform: scale(1.1);
+        }
+
+    </style>
+</head>
+<body>
+    <div id="mainContent">
+        <h1>Pedra, Papel, Tesoura, Spock, Lagarto</h1>
+        <div id="choices">
+            <button class="choice-btn" onclick="playGame('rock')"><i class="fa-regular fa-hand-back-fist"></i></button>
+            <button class="choice-btn" onclick="playGame('paper')"><i class="fa-regular fa-hand-paper"></i></button>
+            <button class="choice-btn" onclick="playGame('scissors')"><i class="fa-regular fa-hand-scissors"></i></button>
+            <button class="choice-btn" onclick="playGame('spock')"><i class="fa-regular fa-hand-spock"></i></button>
+            <button class="choice-btn" onclick="playGame('lizard')"><i class="fa-regular fa-hand-lizard"></i></button>
+        </div>
+        <div id="gameArea">
+            <p id="userChoice"></p>
+            <p id="computerChoice"></p>
+        </div>
+        <p id="result"></p>
+        <p id="score">Você: 0 | Computador: 0</p>
+        <button id="resetBtn" onclick="resetGame()">Reiniciar Jogo</button>
+    </div>
+    <script>
+        let userScore = 0;
+        let computerScore = 0;
+        const choices = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
+
+        function playGame(userChoice) {
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            const resultElement = document.getElementById("result");
+            const userChoiceElement = document.getElementById("userChoice");
+            const computerChoiceElement = document.getElementById("computerChoice");
+            const scoreElement = document.getElementById("score");
+            const userButton = document.querySelector(`.choice-btn[onclick="playGame('${userChoice}')"]`);
+            const computerButton = document.querySelector(`.choice-btn[onclick="playGame('${computerChoice}')"]`);
+
+            userChoiceElement.textContent = `Você escolheu: ${translateChoice(userChoice)}`;
+            computerChoiceElement.textContent = `Computador escolheu: ${translateChoice(computerChoice)}`;
+
+            userButton.classList.remove('winner');
+            computerButton.classList.remove('winner');
+
+            if (userChoice === computerChoice) {
+                resultElement.textContent = "Empate!";
+            } else if (
+                (userChoice === 'rock' && computerChoice === 'scissors') ||
+                (userChoice === 'rock' && computerChoice === 'lizard') ||
+                (userChoice === 'paper' && computerChoice === 'rock') ||
+                (userChoice === 'paper' && computerChoice === 'spock') ||
+                (userChoice === 'scissors' && computerChoice === 'paper') ||
+                (userChoice === 'scissors' && computerChoice === 'lizard') ||
+                (userChoice === 'spock' && computerChoice === 'rock') ||
+                (userChoice === 'spock' && computerChoice === 'scissors') ||
+                (userChoice === 'lizard' && computerChoice === 'paper') ||
+                (userChoice === 'lizard' && computerChoice === 'spock')
+            ) {
+                resultElement.textContent = "Você venceu!";
+                userScore++;
+                userButton.classList.add('winner');
+            } else {
+                resultElement.textContent = "Computador venceu!";
+                computerScore++;
+                computerButton.classList.add('winner');
+            }
+
+            scoreElement.textContent = `Você: ${userScore} | Computador: ${computerScore}`;
+        }
+
+        function translateChoice(choice) {
+            if (choice === 'rock') return 'Pedra';
+            if (choice === 'paper') return 'Papel';
+            if (choice === 'scissors') return 'Tesoura';
+            if (choice === 'spock') return 'Spock';
+            if (choice === 'lizard') return 'Lagarto';
+        }
+
+        function resetGame() {
+            userScore = 0;
+            computerScore = 0;
+            document.getElementById("score").textContent = "Você: 0 | Computador: 0";
+            document.getElementById("result").textContent = "";
+            document.getElementById("userChoice").textContent = "";
+            document.getElementById("computerChoice").textContent =
