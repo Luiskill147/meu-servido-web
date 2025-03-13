@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pedra, Papel, Tesoura</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #3498db;
+            margin-top: 30px;
+        }
+
+        #choices {
+            margin-top: 20px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            background-color: #3498db;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #score {
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        #gameArea {
+            margin-top: 30px;
+        }
+
+        #userChoice, #computerChoice {
+            font-size: 18px;
+            margin: 10px;
+        }
+        #mainContent {
+          flex:1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainContent">
+      <h1>Pedra, Papel, Tesoura</h1>
+      <p>Escolha:</p>
+      <div id="choices">
+          <button onclick="playGame('rock')">Pedra</button>
+          <button onclick="playGame('paper')">Papel</button>
+          <button onclick="playGame('scissors')">Tesoura</button>
+      </div>
+      <div id="gameArea">
+          <p id="userChoice"></p>
+          <p id="computerChoice"></p>
+      </div>
+      <p id="result"></p>
+      <p id="score">Você: 0 | Computador: 0</p>
+      <button onclick="resetGame()">Reiniciar Jogo</button>
+    </div>
+
+    <script>
+        let userScore = 0;
+        let computerScore = 0;
+
+        function playGame(userChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            const computerChoice = choices[randomIndex];
+            const resultElement = document.getElementById("result");
+            const userChoiceElement = document.getElementById("userChoice");
+            const computerChoiceElement = document.getElementById("computerChoice");
+            const scoreElement = document.getElementById("score");
+
+            userChoiceElement.textContent = `Você escolheu: ${translateChoice(userChoice)}`;
+            computerChoiceElement.textContent = `Computador escolheu: ${translateChoice(computerChoice)}`;
+
+            if (userChoice === computerChoice) {
+                resultElement.textContent = "Empate!";
+            } else if (
+                (userChoice === 'rock' && computerChoice === 'scissors') ||
+                (userChoice === 'paper' && computerChoice === 'rock') ||
+                (userChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                resultElement.textContent = "Você venceu!";
+                userScore++;
+            } else {
+                resultElement.textContent = "Computador venceu!";
+                computerScore++;
+            }
+
+            scoreElement.textContent = `Você: ${userScore} | Computador: ${computerScore}`;
+        }
+
+        function translateChoice(choice) {
+            if (choice === 'rock') return 'Pedra';
+            if (choice === 'paper') return 'Papel';
+            return 'Tesoura';
+        }
+
+        function resetGame() {
+            userScore = 0;
+            computerScore = 0;
+            document.getElementById("score").textContent = "Você: 0 | Computador: 0";
+            document.getElementById("result").textContent = "";
+            document.getElementById("userChoice").textContent = "";
+            document.getElementById("computerChoice").textContent = "";
+        }
+    </script>
+</body>
+</html>
