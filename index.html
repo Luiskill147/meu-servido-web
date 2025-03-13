@@ -137,11 +137,11 @@
     <div id="mainContent">
         <h1>Pedra, Papel, Tesoura, Spock, Lagarto</h1>
         <div id="choices">
-            <button class="choice-btn" data-choice="rock"><i class="fa-regular fa-hand-back-fist"></i></button>
-            <button class="choice-btn" data-choice="paper"><i class="fa-regular fa-hand-paper"></i></button>
-            <button class="choice-btn" data-choice="scissors"><i class="fa-regular fa-hand-scissors"></i></button>
-            <button class="choice-btn" data-choice="spock"><i class="fa-regular fa-hand-spock"></i></button>
-            <button class="choice-btn" data-choice="lizard"><i class="fa-regular fa-hand-lizard"></i></button>
+            <button class="choice-btn rock"><i class="fa-regular fa-hand-back-fist"></i></button>
+            <button class="choice-btn paper"><i class="fa-regular fa-hand-paper"></i></button>
+            <button class="choice-btn scissors"><i class="fa-regular fa-hand-scissors"></i></button>
+            <button class="choice-btn spock"><i class="fa-regular fa-hand-spock"></i></button>
+            <button class="choice-btn lizard"><i class="fa-regular fa-hand-lizard"></i></button>
         </div>
         <div id="gameArea">
             <p id="userChoice"></p>
@@ -159,7 +159,7 @@
 
         choiceButtons.forEach(button => {
             button.addEventListener('click', () => {
-                const userChoice = button.dataset.choice;
+                const userChoice = button.classList[1];
                 playGame(userChoice);
             });
         });
@@ -176,8 +176,8 @@
 
             choiceButtons.forEach(button => button.classList.remove('winner'));
 
-            const userButton = document.querySelector(`.choice-btn[data-choice="${userChoice}"]`);
-            const computerButton = document.querySelector(`.choice-btn[data-choice="${computerChoice}"]`);
+            const userButton = document.querySelector(`.choice-btn.${userChoice}`);
+            const computerButton = document.querySelector(`.choice-btn.${computerChoice}`);
 
             if (userChoice === computerChoice) {
                 resultElement.textContent = "Empate!";
@@ -206,5 +206,5 @@
         }
 
         function translateChoice(choice) {
-            if (choice === 'rock') return 'Pedra';
-            if (choice === 'paper') return 'Papel';
+            if (choice === 'rock') return 'Ped
+                
