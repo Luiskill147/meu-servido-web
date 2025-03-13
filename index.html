@@ -126,11 +126,11 @@
     <div id="mainContent">
         <h1>Pedra, Papel, Tesoura, Spock, Lagarto</h1>
         <div id="choices">
-            <button class="choice-btn" onclick="playGame('rock')"><i class="fa-regular fa-hand-back-fist"></i></button>
-            <button class="choice-btn" onclick="playGame('paper')"><i class="fa-regular fa-hand-paper"></i></button>
-            <button class="choice-btn" onclick="playGame('scissors')"><i class="fa-regular fa-hand-scissors"></i></button>
-            <button class="choice-btn" onclick="playGame('spock')"><i class="fa-regular fa-hand-spock"></i></button>
-            <button class="choice-btn" onclick="playGame('lizard')"><i class="fa-regular fa-hand-lizard"></i></button>
+            <button class="choice-btn" data-choice="rock"><i class="fa-regular fa-hand-back-fist"></i></button>
+            <button class="choice-btn" data-choice="paper"><i class="fa-regular fa-hand-paper"></i></button>
+            <button class="choice-btn" data-choice="scissors"><i class="fa-regular fa-hand-scissors"></i></button>
+            <button class="choice-btn" data-choice="spock"><i class="fa-regular fa-hand-spock"></i></button>
+            <button class="choice-btn" data-choice="lizard"><i class="fa-regular fa-hand-lizard"></i></button>
         </div>
         <div id="gameArea">
             <p id="userChoice"></p>
@@ -144,6 +144,14 @@
         let userScore = 0;
         let computerScore = 0;
         const choices = ['rock', 'paper', 'scissors', 'spock', 'lizard'];
+        const choiceButtons = document.querySelectorAll('.choice-btn');
+
+        choiceButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const userChoice = button.dataset.choice;
+                playGame(userChoice);
+            });
+        });
 
         function playGame(userChoice) {
             const computerChoice = choices[Math.floor(Math.random() * choices.length)];
@@ -151,14 +159,14 @@
             const userChoiceElement = document.getElementById("userChoice");
             const computerChoiceElement = document.getElementById("computerChoice");
             const scoreElement = document.getElementById("score");
-            const userButton = document.querySelector(`.choice-btn[onclick="playGame('${userChoice}')"]`);
-            const computerButton = document.querySelector(`.choice-btn[onclick="playGame('${computerChoice}')"]`);
 
             userChoiceElement.textContent = `Você escolheu: ${translateChoice(userChoice)}`;
             computerChoiceElement.textContent = `Computador escolheu: ${translateChoice(computerChoice)}`;
 
-            userButton.classList.remove('winner');
-            computerButton.classList.remove('winner');
+            choiceButtons.forEach(button => button.classList.remove('winner'));
+
+            const userButton = document.querySelector(`.choice-btn[data-choice="${userChoice}"]`);
+            const computerButton = document.querySelector(`.choice-btn[data-choice="${computerChoice}"]`);
 
             if (userChoice === computerChoice) {
                 resultElement.textContent = "Empate!";
@@ -191,13 +199,4 @@
             if (choice === 'paper') return 'Papel';
             if (choice === 'scissors') return 'Tesoura';
             if (choice === 'spock') return 'Spock';
-            if (choice === 'lizard') return 'Lagarto';
-        }
-
-        function resetGame() {
-            userScore = 0;
-            computerScore = 0;
-            document.getElementById("score").textContent = "Você: 0 | Computador: 0";
-            document.getElementById("result").textContent = "";
-            document.getElementById("userChoice").textContent = "";
-            document.getElementById("computerChoice").textContent =
+            
